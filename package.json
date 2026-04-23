@@ -1,7 +1,7 @@
 {
   "name": "xypriss-on-headers",
   "description": "Execute a listener when a response is about to write headers - Customized for XyPriss",
-  "version": "1.1.1-xypriss",
+  "version": "2.0.0-xypriss",
   "author": "Nehonix Team (2026)",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>"
