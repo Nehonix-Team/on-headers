@@ -1,13 +1,14 @@
 {
   "name": "xypriss-on-headers",
   "description": "Execute a listener when a response is about to write headers - Customized for XyPriss",
-  "version": "2.0.0-xypriss",
+  "version": "2.0.1",
   "author": "Nehonix Team (2026)",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "xfpm run build"
   },
   "license": "MIT",
   "main": "index.ts",
@@ -18,7 +19,6 @@
     "README.md",
     "HISTORY.md"
   ],
-  "private": true,
   "engines": {
     "node": ">= 0.8"
   }
