@@ -1,81 +1,50 @@
-# on-headers
+# XyPriss Header Interception (xypriss-on-headers)
 
-[![NPM Version][npm-version-image]][npm-url]
-[![NPM Downloads][npm-downloads-image]][npm-url]
-[![Node.js Version][node-image]][node-url]
-[![Build Status][ci-image]][ci-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
+> [!NOTE]
+> **Internalized Fork**: This module is a strictly typed TypeScript port of the original `on-headers` library. It has been internalized into the XyPriss ecosystem to reduce external dependency surfaces and ensure architectural consistency within XyPriss framework plugins.
 
-Execute a listener when a response is about to write headers.
+## Overview
+
+The `xypriss-on-headers` module provides a robust mechanism to execute a listener function precisely before an HTTP response begins writing its headers to the client. This is essential for middleware that needs to modify headers based on the final state of the response, such as compression filters or security policy enforcers.
 
 ## Installation
 
-This is a [Node.js](https://nodejs.org/en/) module available through the
-[npm registry](https://www.npmjs.com/). Installation is done using the
-[`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
+This module is distributed and managed via the XyPriss Package Manager.
 
 ```sh
-$ npm install on-headers
+xfpm install xypriss-on-headers
 ```
 
-## API
+## Usage
 
-<!-- eslint-disable no-unused-vars -->
+Integrate the interception logic using ESM syntax.
 
-```js
-var onHeaders = require('on-headers')
-```
-
-### onHeaders(res, listener)
-
-This will add the listener `listener` to fire when headers are emitted for `res`.
-The listener is passed the `response` object as it's context (`this`). Headers are
-considered to be emitted only once, right before they are sent to the client.
-
-When this is called multiple times on the same `res`, the `listener`s are fired
-in the reverse order they were added.
-
-## Examples
-
-```js
-var http = require('http')
-var onHeaders = require('on-headers')
+```typescript
+import http from "http";
+import onHeaders from "xypriss-on-headers";
 
 http
-  .createServer(onRequest)
-  .listen(3000)
+  .createServer((req, res) => {
+    onHeaders(res, function () {
+      // This function executes just before writeHead is called
+      this.setHeader("X-Powered-By", "XyPriss-Engine");
+    });
 
-function addPoweredBy () {
-  // set if not set by end of request
-  if (!this.getHeader('X-Powered-By')) {
-    this.setHeader('X-Powered-By', 'Node.js')
-  }
-}
-
-function onRequest (req, res) {
-  onHeaders(res, addPoweredBy)
-
-  res.setHeader('Content-Type', 'text/plain')
-  res.end('hello!')
-}
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("Operational");
+  })
+  .listen(3000);
 ```
 
-## Testing
+## Technical Implementation
 
-```sh
-$ npm test
-```
+- **Strict TypeScript Port**: Built from the ground up utilizing native TypeScript for optimal IDE support and compile-time safety.
+- **Compatibility Bridge**: Maintains one-to-one behavioral parity with standard Node.js `http.ServerResponse.prototype.writeHead` interceptors.
+- **Performance Optimized**: Eliminates unnecessary legacy object cloning and utilizes direct stack references for minimal overhead during high-concurrency event cycles.
 
-## License
+## License Declarations
 
-[MIT](LICENSE)
-
-[ci-image]: https://badgen.net/github/checks/jshttp/on-headers/master?label=ci
-[ci-url]: https://github.com/jshttp/on-headers/actions/workflows/ci.yml
-[coveralls-image]: https://badgen.net/coveralls/c/github/jshttp/on-headers/master
-[coveralls-url]: https://coveralls.io/r/jshttp/on-headers?branch=master
-[node-image]: https://badgen.net/npm/node/on-headers
-[node-url]: https://nodejs.org/en/download
-[npm-downloads-image]: https://badgen.net/npm/dm/on-headers
-[npm-url]: https://npmjs.org/package/on-headers
-[npm-version-image]: https://badgen.net/npm/v/on-headers
+Copyright © 2014 Douglas Christopher Wilson  
+Copyright © 2026 Nehonix Team  
+Released under the MIT License.
